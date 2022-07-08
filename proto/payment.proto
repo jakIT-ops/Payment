@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package protos;
+
+option go_package = "pb";
+
+service Transaction {
+    rpc DebitAmount(TransactionRequest) returns (TransactionResponse);
+    rpc CreditAmount(TransactionRequest) returns (TransactionResponse);
+    rpc GetBalance(Account_Id) returns (Balance) ;
+}
+
+message TransactionRequest {
+    string AccountId = 1;
+	string TransactionInfor = 2; 
+	int64 DebitAmount = 3;
+	int64 CreditAmount = 4;
+}
+
+message TransactionResponse {
+    string TransactionInfor = 1;
+    int32 TransactionId = 2; 
+}
+
+message Balance {
+    int64 Amount = 1;
+}
+
+message Account_Id {
+    string value = 1;
+}

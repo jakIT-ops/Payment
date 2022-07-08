@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package protos;
+
+option go_package = "/pb";
+
+service Account {
+    rpc GetAccounts(Empty) returns (stream AccountInfo);
+    rpc GetAccount (Id) returns (AccountInfo);
+    rpc CreateAccount (AccountInfo) returns (Id);
+    rpc UpdateAccount (AccountInfo) returns (Status);
+    rpc DeleteAccount (Id) returns (Status);
+    rpc GetBalance (Id) returns (Amount);
+}
+
+message Empty{}
+
+message AccountInfo {
+        string Id = 1;
+        string Owner = 2;
+        string Currency = 3;
+        double Balance = 4;
+}
+
+message Id {
+        string value = 1;
+}
+
+message Status {
+        int32 value = 1;
+}
+
+message Amount {
+        double value =1;
+}
