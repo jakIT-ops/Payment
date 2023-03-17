@@ -34,6 +34,45 @@ func newUserResponse(user models.User) userResponse {
 	}
 }
 
+func CreateUsers(ctx *fiber.Ctx) error {
+	var req createUserRequest
+	if err := ctx.BodyParser(&req); err != nil {
+		return ctx.Status(fiber.ErrBadRequest.Code).JSON(&fiber.Map{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	log.Println("before hash pass:", req.Password)
+	hashedPassword, err := utils.HashPassword(req.Password)
+	log.Println("after hash pass:", hashedPassword)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+
+	arg := services.CreateUserParams{
+		Username: req.Username,
+		Password: hashedPassword,
+		Email:    req.Email,
+	}
+
+	user, err := serviceUser.CreateUser(arg)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+
+	rsp := newUserResponse(user)
+	return ctx.Status(fiber.StatusOK).JSON(&fiber.Map{
+		"status":  "Амжилттай хадаглалаа",
+		"account": rsp,
+	})
+}
+
 func (server *Server) createUser(ctx *fiber.Ctx) error {
 	var req createUserRequest
 	if err := ctx.BodyParser(&req); err != nil {
@@ -78,14 +117,14 @@ type loginUserRequest struct {
 	Password string `json:"password" binding:"required,min=6"`
 }
 
-// type loginUserResponse struct {
-// 	SessionID             uuid.UUID    `json:"session_id"`
-// 	AccessToken           string       `json:"access_token"`
-// 	AccessTokenExpiresAt  time.Time    `json:"access_token_expires_at"`
-// 	RefreshToken          string       `json:"refresh_token"`
-// 	RefreshTokenExpiresAt time.Time    `json:"refresh_token_expires_at"`
-// 	User                  userResponse `json:"user"`
-// }
+//	type loginUserResponse struct {
+//		SessionID             uuid.UUID    `json:"session_id"`
+//		AccessToken           string       `json:"access_token"`
+//		AccessTokenExpiresAt  time.Time    `json:"access_token_expires_at"`
+//		RefreshToken          string       `json:"refresh_token"`
+//		RefreshTokenExpiresAt time.Time    `json:"refresh_token_expires_at"`
+//		User                  userResponse `json:"user"`
+//	}
 type loginUserResponse struct {
 	AccessToken string       `json:"access_token"`
 	User        userResponse `json:"user"`
@@ -119,10 +158,10 @@ func (server *Server) loginUser(ctx *fiber.Ctx) error {
 	}
 	log.Println("test3")
 
-	accessToken, err := server.tokenMaker.CreateToken(
-		user.UserName,
-		server.config.AccessTokenDuration,
-	)
+	//accessToken, err := server.tokenMaker.CreateToken(
+	//	user.UserName,
+	//	server.config.AccessTokenDuration,
+	//)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
@@ -132,8 +171,8 @@ func (server *Server) loginUser(ctx *fiber.Ctx) error {
 	log.Println("test4")
 
 	rsp := &loginUserResponse{
-		AccessToken: accessToken,
-		User:        newUserResponse(user),
+		//AccessToken: accessToken,
+		User: newUserResponse(user),
 	}
 	return ctx.Status(fiber.StatusOK).JSON(&fiber.Map{
 		"success": "Амжилттай нэвтэрлэлээ",

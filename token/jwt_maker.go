@@ -36,6 +36,17 @@ func (maker *JWTMaker) CreateToken(username string, duration time.Duration) (str
 	return jwtToken.SignedString([]byte(maker.secretKey))
 }
 
+func CreateToken(username string, duration time.Duration) (string, error) {
+	log.Println("Recieved", duration, username)
+	payload, err := NewPayload(username, duration)
+	if err != nil {
+		return "", err
+	}
+
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+	return jwtToken.SignedString([]byte("TOKEN_SYMMETRIC_KEY"))
+}
+
 func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
 	keyFunc := func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)

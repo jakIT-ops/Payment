@@ -1,16 +1,15 @@
 package main
 
 import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/favicon"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"log"
 	"os"
 	"payment_full/api"
 	"payment_full/db"
 	"payment_full/utils"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/favicon"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func main() {
@@ -23,17 +22,17 @@ func main() {
 	db.ConnectDb()
 
 	// ######grpc server###############
-	// lis, err := net.Listen("tcp", ":4040")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// srv := grpc.NewServer()
-	// pb.RegisterTransactionServer(srv, &rpc.PaymentServer{})
-	// reflection.Register(srv)
-	// log.Printf("server 	listening at %v", lis.Addr())
-	// if e := srv.Serve(lis); e != nil {
-	// 	panic(err)
-	// }
+	//lis, err := net.Listen("tcp", ":4040")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//srv := grpc.NewServer()
+	//pb.RegisterTransactionServer(srv, &rpc.PaymentServer{})
+	//reflection.Register(srv)
+	//log.Printf("server 	listening at %v", lis.Addr())
+	//if e := srv.Serve(lis); e != nil {
+	//	panic(err)
+	//}
 
 	file, err := os.OpenFile("./log/123.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -42,6 +41,8 @@ func main() {
 	defer file.Close()
 
 	app := fiber.New()
+
+	//
 
 	// Middlewares
 	app.Use(cors.New())
@@ -55,6 +56,9 @@ func main() {
 
 	// INITIAL ROUTE
 	app.Static("/", "./public")
+	//app.Post("/create", api.CreateUsers)
+	//app.Post("/login", api.LoginUser)
+
 	api.NewServer(config, app)
 
 	app.Listen(":8080")

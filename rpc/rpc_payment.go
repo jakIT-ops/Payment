@@ -25,14 +25,12 @@ func (p *PaymentServer) DebitAmount(ctx context.Context, in *pb.TransactionReque
 
 func (p *PaymentServer) CreditAmount(ctx context.Context, in *pb.TransactionRequest) (*pb.TransactionResponse, error) {
 	log.Printf("Received: %v", in)
-	// var trans models.Transaction
 	trans := models.Transaction{AccountId: in.AccountId, TransactionValue: in.TransactionInfor, DebitAmount: in.DebitAmount, CreditAmount: in.CreditAmount}
 	db.Database.Db.Create(&trans)
 	res := pb.TransactionResponse{TransactionInfor: trans.TransactionValue, TransactionId: int32(trans.Id)}
 	return &res, nil
 }
 
-// find account
 func findAccount(id string, account *models.Account) error {
 	db.Database.Db.Find(&account, "account_id = ?", id)
 

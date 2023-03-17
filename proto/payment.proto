@@ -11,7 +11,7 @@ service Transaction {
 }
 
 message TransactionRequest {
-    string AccountId = 1;
+  string AccountId = 1;
 	string TransactionInfor = 2; 
 	int64 DebitAmount = 3;
 	int64 CreditAmount = 4;
