@@ -38,7 +38,7 @@ func RandomMoney() int64 {
 }
 
 func RandomCurrency() string {
-	currencies := []string{"MNT", "RUB", "USD", "CNY"}
+	currencies := []string{"MNT", "EUR", "USD", "CNY"}
 	n := len(currencies)
 	return currencies[rand.Intn(n)]
 }
