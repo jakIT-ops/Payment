@@ -8,8 +8,7 @@ import "rpc_verify_email.proto";
 
 package pb;
 
-option go_package = "payment_full/pb";
-
+option go_package = "https://github.com/jakIT-ops/Payment/pb";
 
 service SimpleBank {
 	rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {

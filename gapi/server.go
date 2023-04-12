@@ -6,26 +6,29 @@ import (
 	"payment_full/pb"
 	"payment_full/token"
 	"payment_full/utils"
+	"payment_full/worker"
 )
 
 type Server struct {
 	pb.UnimplementedSimpleBankServer
-	config     utils.Config
-	store      db.Store
-	tokenMaker token.Maker
-	//taskDistributor worker.TaskDistributor
+	config          utils.Config
+	store           db.Store
+	tokenMaker      token.Maker
+	taskDistributor worker.TaskDistributor
 }
 
-func NewServer(config utils.Config, store db.Store) (*Server, error) {
+// NewServer creates a new gRPC server.
+func NewServer(config utils.Config, store db.Store, taskDistributor worker.TaskDistributor) (*Server, error) {
 	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
 	if err != nil {
-		return nil, fmt.Errorf("токен үүсгэлт амжилтгүй: %w", err)
+		return nil, fmt.Errorf("cannot create token maker: %w", err)
 	}
 
 	server := &Server{
-		config:     config,
-		store:      store,
-		tokenMaker: tokenMaker,
+		config:          config,
+		store:           store,
+		tokenMaker:      tokenMaker,
+		taskDistributor: taskDistributor,
 	}
 
 	return server, nil

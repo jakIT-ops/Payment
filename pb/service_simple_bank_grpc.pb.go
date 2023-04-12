@@ -22,10 +22,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SimpleBankClient interface {
-	CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts ...grpc.CallOption) (*pb.CreateUserResponse, error)
-	UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, opts ...grpc.CallOption) (*pb.UpdateUserResponse, error)
-	LoginUser(ctx context.Context, in *pb.LoginUserRequest, opts ...grpc.CallOption) (*pb.LoginUserResponse, error)
-	VerifyEmail(ctx context.Context, in *pb.VerifyEmailRequest, opts ...grpc.CallOption) (*pb.VerifyEmailResponse, error)
+	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
+	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
+	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 }
 
 type simpleBankClient struct {
@@ -36,8 +36,8 @@ func NewSimpleBankClient(cc grpc.ClientConnInterface) SimpleBankClient {
 	return &simpleBankClient{cc}
 }
 
-func (c *simpleBankClient) CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts ...grpc.CallOption) (*pb.CreateUserResponse, error) {
-	out := new(pb.CreateUserResponse)
+func (c *simpleBankClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
+	out := new(CreateUserResponse)
 	err := c.cc.Invoke(ctx, "/pb.SimpleBank/CreateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -45,8 +45,8 @@ func (c *simpleBankClient) CreateUser(ctx context.Context, in *pb.CreateUserRequ
 	return out, nil
 }
 
-func (c *simpleBankClient) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, opts ...grpc.CallOption) (*pb.UpdateUserResponse, error) {
-	out := new(pb.UpdateUserResponse)
+func (c *simpleBankClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
+	out := new(UpdateUserResponse)
 	err := c.cc.Invoke(ctx, "/pb.SimpleBank/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -54,8 +54,8 @@ func (c *simpleBankClient) UpdateUser(ctx context.Context, in *pb.UpdateUserRequ
 	return out, nil
 }
 
-func (c *simpleBankClient) LoginUser(ctx context.Context, in *pb.LoginUserRequest, opts ...grpc.CallOption) (*pb.LoginUserResponse, error) {
-	out := new(pb.LoginUserResponse)
+func (c *simpleBankClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
+	out := new(LoginUserResponse)
 	err := c.cc.Invoke(ctx, "/pb.SimpleBank/LoginUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -63,8 +63,8 @@ func (c *simpleBankClient) LoginUser(ctx context.Context, in *pb.LoginUserReques
 	return out, nil
 }
 
-func (c *simpleBankClient) VerifyEmail(ctx context.Context, in *pb.VerifyEmailRequest, opts ...grpc.CallOption) (*pb.VerifyEmailResponse, error) {
-	out := new(pb.VerifyEmailResponse)
+func (c *simpleBankClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error) {
+	out := new(VerifyEmailResponse)
 	err := c.cc.Invoke(ctx, "/pb.SimpleBank/VerifyEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -76,10 +76,10 @@ func (c *simpleBankClient) VerifyEmail(ctx context.Context, in *pb.VerifyEmailRe
 // All implementations must embed UnimplementedSimpleBankServer
 // for forward compatibility
 type SimpleBankServer interface {
-	CreateUser(context.Context, *pb.CreateUserRequest) (*pb.CreateUserResponse, error)
-	UpdateUser(context.Context, *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error)
-	LoginUser(context.Context, *pb.LoginUserRequest) (*pb.LoginUserResponse, error)
-	VerifyEmail(context.Context, *pb.VerifyEmailRequest) (*pb.VerifyEmailResponse, error)
+	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
+	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	mustEmbedUnimplementedSimpleBankServer()
 }
 
@@ -87,16 +87,16 @@ type SimpleBankServer interface {
 type UnimplementedSimpleBankServer struct {
 }
 
-func (UnimplementedSimpleBankServer) CreateUser(context.Context, *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+func (UnimplementedSimpleBankServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedSimpleBankServer) UpdateUser(context.Context, *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+func (UnimplementedSimpleBankServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedSimpleBankServer) LoginUser(context.Context, *pb.LoginUserRequest) (*pb.LoginUserResponse, error) {
+func (UnimplementedSimpleBankServer) LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
 }
-func (UnimplementedSimpleBankServer) VerifyEmail(context.Context, *pb.VerifyEmailRequest) (*pb.VerifyEmailResponse, error) {
+func (UnimplementedSimpleBankServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
 }
 func (UnimplementedSimpleBankServer) mustEmbedUnimplementedSimpleBankServer() {}
@@ -113,7 +113,7 @@ func RegisterSimpleBankServer(s grpc.ServiceRegistrar, srv SimpleBankServer) {
 }
 
 func _SimpleBank_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(pb.CreateUserRequest)
+	in := new(CreateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -125,13 +125,13 @@ func _SimpleBank_CreateUser_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/pb.SimpleBank/CreateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SimpleBankServer).CreateUser(ctx, req.(*pb.CreateUserRequest))
+		return srv.(SimpleBankServer).CreateUser(ctx, req.(*CreateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _SimpleBank_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(pb.UpdateUserRequest)
+	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -143,13 +143,13 @@ func _SimpleBank_UpdateUser_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/pb.SimpleBank/UpdateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SimpleBankServer).UpdateUser(ctx, req.(*pb.UpdateUserRequest))
+		return srv.(SimpleBankServer).UpdateUser(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _SimpleBank_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(pb.LoginUserRequest)
+	in := new(LoginUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -161,13 +161,13 @@ func _SimpleBank_LoginUser_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/pb.SimpleBank/LoginUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SimpleBankServer).LoginUser(ctx, req.(*pb.LoginUserRequest))
+		return srv.(SimpleBankServer).LoginUser(ctx, req.(*LoginUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _SimpleBank_VerifyEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(pb.VerifyEmailRequest)
+	in := new(VerifyEmailRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -179,7 +179,7 @@ func _SimpleBank_VerifyEmail_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/pb.SimpleBank/VerifyEmail",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SimpleBankServer).VerifyEmail(ctx, req.(*pb.VerifyEmailRequest))
+		return srv.(SimpleBankServer).VerifyEmail(ctx, req.(*VerifyEmailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
